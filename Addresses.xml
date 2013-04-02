@@ -1,0 +1,23 @@
+   <?xml version="1.0" encoding="utf-8"?>
+   <addressbook>
+      <contacts id="Contacts">
+         <contact id="Alex">
+            <email id="popmail"> 
+               someone@some_pop_mail.net</email>
+            <city>Edinburgh</city>
+            <country>United Kingdom</country>
+         </contact>
+         <contact id="Rebekah">
+            <email id="webmail">
+               someone@some_web_mail.net</email>
+            <city>Papakura</city>
+            <country>New Zealand</country>
+         </contact>
+         <contact id="Justin">
+            <email id="webmail">
+               someone_else@some_web_mail.com</email>
+            <city>Muriwai</city>
+            <country>New Zealand</country>
+         </contact>
+      </contacts>
+   </addressbook>

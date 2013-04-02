@@ -1,0 +1,60 @@
+<ImBel>
+    <App>
+        <PositionX></PositionX>
+        <PositionY></PositionY>
+        <Width></Width>
+        <Height></Height>
+        <ActiveTemplate></ActiveTemplate>
+    </App>
+    <Templates>
+        <Template1 tag="Zenfolio 1024">
+            <Image>
+                <name>2011-12-03_0001.nef</name>
+                <HorizontalPixels>1024</HorizontalPixels>
+                <VerticalPixels>1024</VerticalPixels>
+                <SharpenAmount>25</SharpenAmount>
+                <FileType>JPG</FileType>
+                <Compression>75</Compression>
+                <ColorSpace>sRGB</ColorSpace>
+                <FileLocationLogic>SubFolder</FileLocationLogic>
+                <Folder></Folder>
+                <FileSuffix></FileSuffix>
+                <OverwriteExistingFiles>Yes</OverwriteExistingFiles>
+                <Style></Style>
+            </Image>
+            <Borders>
+            </Borders>
+            <Text>
+            </Text>
+            <Shapes>
+            </Shapes>
+            <Logos>
+            </Logos>
+        </Template1>
+        <Template2 tag="Zenfolio homepage">
+            <Image>
+                <Name>2011-12-03_0001.nef</Name>
+                <HorizontalPixels>1024</HorizontalPixels>
+                <VerticalPixels>1024</VerticalPixels>
+                <SharpenAmount>25</SharpenAmount>
+                <FileType>JPG</FileType>
+                <Compression>75</Compression>
+                <ColorSpace>sRGB</ColorSpace>
+                <FileLocationLogic>SubFolder</FileLocationLogic>
+                <Folder></Folder>
+                <FileSuffix></FileSuffix>
+                <OverwriteExistingFiles>Yes</OverwriteExistingFiles>
+                <Style></Style>
+            </Image>
+            <Borders>
+            </Borders>
+            <Text>
+            </Text>
+            <Shapes>
+            </Shapes>
+            <Logos>
+            </Logos>
+        </Template2>
+    </Templates>
+</ImBel>
+
