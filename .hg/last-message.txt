@@ -1,1 +1,1 @@
-Working on filtering treeview
+comboboxTemplate is now synched with treeviewTemplate

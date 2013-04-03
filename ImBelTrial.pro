@@ -28,3 +28,6 @@ FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     ImBel.xml
+
+RESOURCES += \
+    ImBel.qrc

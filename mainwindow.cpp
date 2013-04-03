@@ -9,26 +9,36 @@
 #include <QDate>
 #include <QDebug>
 #include <QTableWidget>
+#include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), model(0)
 {
     setupUi(this);
     this->setWindowTitle(tr("ImBel"));
+    QPixmap pixmap("D:/Data/My Projects/Qt/Examples/ImBelTrial/hummer1.png");
+    // resource not working
+    //QPixmap pixmap(":/D:/Data/My Projects/Qt/Examples/ImBelTrial/hummer1.png");
+
+    this->setWindowIcon(pixmap);
     InitImage();
     InitStatusBar();
-    InitComboBoxTemplates();
     InitModel();
-    InitTreeViewTemplate();
+    InitTemplatesList();
+    InitTreeViewTemplate();     // this must precede InitComboBoxTemplates()
+    InitComboBoxTemplates();
 }
 
 void MainWindow::InitModel()
 {
+    // Read ImBel.xml which has all the template data and program status data.
+    // Populate a model that is used throughout the program.
     QString filePath = "D:/Data/My Projects/Qt/Examples/ImBelTrial/ImBel.xml";
     if (!filePath.isEmpty()) {
       QFile file(filePath);
       if (file.open(QIODevice::ReadOnly)) {
           QDomDocument document;
+          // This will fail if xml is not well formed.
           if (document.setContent(&file)) {
               model = new DomModel(document, this);
               xmlPath = filePath;
@@ -38,27 +48,76 @@ void MainWindow::InitModel()
   }
 }
 
+void MainWindow::InitComboBoxTemplates()
+{
+    // Add all the template descriptions to the combobox.  The descriptions
+    // are sourced from the tag field (column 1) in the xml file and the model.
+    for (int i = 0; i < strTemplateDescriptionList.count(); ++i)
+        comboBoxTemplate->addItem(strTemplateDescriptionList[i]);
+}
+
+void MainWindow::on_comboBoxTemplate_currentIndexChanged(int index)
+{
+    // When a new template has been selected in comboBoxTemplate
+    // the treeview root index is updated to the same template.
+    UpdateTreeViewTemplate(strTemplateNameList[index]);
+}
+
+void MainWindow::InitTemplatesList()
+{
+    // Search for all occurences of "Template" in model of the xml data file.
+    QModelIndexList &idxList = model->match(model->index(0, 0), Qt::DisplayRole,
+                                "Template", 100, Qt::MatchStartsWith | Qt::MatchRecursive);
+    int row = 0;
+    // Ignore "Templates".  We just want Template1, Template2...
+    if (idxList.size() > 0) {
+        // Iterate through the list of model elements found
+        for (int i = 0; i < idxList.size(); ++i) {
+            // This is column 0 - the node name
+            QModelIndex &idx0 = idxList[i];
+            row = idx0.row();
+            // Column 1 has the tag, which has the descriptive name.  We have to do this
+            // because white spaces are not allowed in the node name in xml.
+            QModelIndex idx1 = model->index(row, 1, idx0.parent());
+            // Take a look at the data in column 1.
+            QString text = model->data(idx1, Qt::DisplayRole).toString();
+            // If there is no tag then it is the parent node "Templates".
+            if (text.length() > 0) {
+                // Build a list of the node names.  We will need it to filter the treeviewTemplate
+                // each time the comboboxtemplates is updated.
+                strTemplateNameList.append(model->data(idx0, Qt::DisplayRole).toString());
+                // The tag takes the form "tag = "Zenfolio 1024"" and we need to parse down to
+                // the description in quotes.
+                int pos = text.indexOf('"', 0);
+                // Build the list of template descriptions for comboboxTemplates.
+                strTemplateDescriptionList.append(text.mid(pos + 1, text.length() - pos - 2));
+            }
+        }
+    }
+}
+
 void MainWindow::InitTreeViewTemplate()
 {
     // filter the model as we only want to see the template objects in the
     // template tree: template > image, borders, shapes, graphics etc
+    treeModel = new QSortFilterProxyModel(this);
+    treeModel->setSourceModel(model);
+    treeModel->setFilterKeyColumn(0);
+    QRegExp rx("ImBel|Template|Image|Border|Shape|Graphic");
+    treeModel->setFilterRegExp(rx);
 
-    //QSortFilterProxyModel *treeModel = new QSortFilterProxyModel(this);
-    //treeModel->setFilterKeyColumn(1);
-    //treeModel->setFilterFixedString("Zenfolio");
-    //QRegExp rx("[A-Z]");
-    //treeModel->setFilterRegExp(rx);
-    //treeModel->setSourceModel(model);
-
-    treeViewTemplate->setModel(model);
+    treeViewTemplate->setModel(treeModel);
     treeViewTemplate->header()->hide();
     treeViewTemplate->resizeColumnToContents(0);
     treeViewTemplate->setColumnHidden(1, true);
     treeViewTemplate->setColumnHidden(2, true);
+}
 
-//    QModelIndexList idxList = model->match(treeModel->index(0, 0), Qt::DisplayRole,
-//                                "Template1", 2, Qt::MatchRecursive);
-    //treeViewTemplate->setRootIndex(idxList[0]);
+void MainWindow::UpdateTreeViewTemplate(QString templateName)
+{
+    QModelIndexList idxList = treeModel->match(treeModel->index(0, 0), Qt::DisplayRole,
+                                templateName, 1, Qt::MatchRecursive);
+    treeViewTemplate->setRootIndex(idxList[0]);
 }
 
 void MainWindow::openFile()
@@ -112,16 +171,6 @@ void MainWindow::InitImage()
     graphicsView->show();
 }
 
-void MainWindow::InitComboBoxTemplates()
-{
-    // populate templates combobox with some fake names for now
-    QStringList txt;
-    txt << "Zenfolio 1024" << "Zenfolio homepage" << "800px with no border" <<
-           "Classic frame 1024" << "24x36 inches";
-    for ( QStringList::Iterator it = txt.begin(); it != txt.end(); ++it )
-        comboBoxTemplate->addItem(*it);
-}
-
 void MainWindow::showModelInTree()
 {
     QTreeView *tree = new QTreeView;
@@ -133,4 +182,11 @@ void MainWindow::showModelInTree()
     tree->setAlternatingRowColors(true);
     tree->setMinimumSize(600,800);
     tree->show();
+}
+
+void MainWindow::on_comboBoxTemplate_currentTextChanged(const QString &arg1)
+{
+    // A template name description has been changed.
+    // 1.  Update the description (column 1 in model).
+    // 2.  Save the change in ImBel.xml.
 }

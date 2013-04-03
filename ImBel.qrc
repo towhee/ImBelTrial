@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/D:\Data\My Projects\Qt\Examples\ImBelTrial">
+        <file alias="ImBel">Hummer1.png</file>
+    </qresource>
+</RCC>

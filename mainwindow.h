@@ -20,18 +20,29 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     QProgressBar* pb;
+    QStringList strTemplateNameList;
+    QStringList strTemplateDescriptionList;
 
 public slots:
     void openFile();
+
+private slots:
+    void on_comboBoxTemplate_currentIndexChanged(int index);
+
+    void on_comboBoxTemplate_currentTextChanged(const QString &arg1);
 
 private:
     void InitStatusBar();
     void InitModel();
     void InitTreeViewTemplate();
+    void UpdateTreeViewTemplate(QString);
     void InitComboBoxTemplates();
+    void UpdateComboBoxTemplates();
     void InitImage();
     void showModelInTree();
+    void InitTemplatesList();
     DomModel* model;
+    QSortFilterProxyModel *treeModel;
     QString xmlPath;
     QTreeView* view;
 };

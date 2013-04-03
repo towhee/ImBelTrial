@@ -7,7 +7,7 @@
         <ActiveTemplate></ActiveTemplate>
     </App>
     <Templates>
-        <Template1 tag="Zenfolio 1024">
+        <Template1 description="Zenfolio 1024">
             <Image>
                 <Name>2011-12-03_0001.nef</Name>
                 <HorizontalPixels>1024</HorizontalPixels>
@@ -34,7 +34,7 @@
             <Graphics>
             </Graphics>
         </Template1>
-        <Template2 tag="Zenfolio homepage">
+        <Template2 description="Zenfolio homepage">
             <Image>
                 <Name>2011-12-03_0001.nef</Name>
                 <HorizontalPixels>1024</HorizontalPixels>
@@ -57,6 +57,7 @@
             </Shapes>
             <Graphics>
             </Graphics>
+            <Extra></Extra>
         </Template2>
     </Templates>
 </ImBel>
