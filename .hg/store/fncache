@@ -2,12 +2,14 @@ data/treeTemplate.cpp.i
 data/domitem.h.i
 data/ImBel.xml.i
 data/main.cpp.i
-data/mainwindow.cpp.i
+data/Notes.txt.i
+data/ImBelTrial.pro.user.i
 data/treeTemplate.h.i
 data/mainwindow.h.i
-data/ImBelTrial.pro.user.i
+data/mainwindow.cpp.i
 data/domitem.cpp.i
 data/.hgignore.i
+data/InputSlider.ui.i
 data/dommodel.cpp.i
 data/dommodel.h.i
 data/ImBelTrial.pro.i

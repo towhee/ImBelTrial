@@ -1,0 +1,13 @@
+***************************************************************************
+Custom stylesheet editing
+***************************************************************************
+in case anyone want to know how to do this at runtime inside constructor..
+it took me quite a while to figure this one out…
+so do this inside your Widget/Frame constructor:
+
+this->setProperty(“class”, QString(“TestWidget”));
+
+and later you can do this:
+this->setStyleSheet(“*.TestWidget { background-color: darkgrey } “);
+
+

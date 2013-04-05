@@ -31,12 +31,15 @@ private slots:
 
     void on_comboBoxTemplate_currentTextChanged(const QString &arg1);
 
+    void on_treeViewTemplate_pressed(const QModelIndex &index);
+
 private:
     void InitStatusBar();
     void InitModel();
     void InitTreeViewTemplate();
     void UpdateTreeViewTemplate(QString);
     void InitComboBoxTemplates();
+    void InitTreeViewData();
     void UpdateComboBoxTemplates();
     void InitImage();
     void showModelInTree();

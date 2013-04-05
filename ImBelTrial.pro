@@ -17,17 +17,22 @@ CONFIG += console
 SOURCES += main.cpp\
            mainwindow.cpp \
            dommodel.cpp \
-           domitem.cpp
+           domitem.cpp \
+    UngroupProxyModel.cpp
 
 HEADERS  += mainwindow.h\
             ui_mainwindow.h \
             dommodel.h \
-            domitem.h
+            domitem.h \
+    UngroupProxyModel.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    InputSlider.ui \
+    test.ui
 
 OTHER_FILES += \
-    ImBel.xml
+    ImBel.xml \
+    Notes.txt
 
 RESOURCES += \
     ImBel.qrc

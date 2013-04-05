@@ -112,6 +112,44 @@ QModelIndex DomModel::parent(const QModelIndex &child) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+void DomModel::walkTree(const QModelIndex &node)
+{
+    // Do model stuff with current index
+    // qDebug() << this->data(node, Qt::DisplayRole).toString();
+    qDebug() << this->data(index(node.row(),0,node.parent()), Qt::DisplayRole).toString() << " | "
+             << this->data(index(node.row(),1,node.parent()), Qt::DisplayRole).toString() << " | "
+             << this->data(index(node.row(),2,node.parent()), Qt::DisplayRole).toString() << " | "
+             << this->hasChildren(); // << " | " << node.child(0,0).model()->hasChildren();
+
+//                           Qt::DisplayRole).toString() << " | "
+//             << parent.row() << " | " << parent.column() << " | " << parent.parent() << " | "
+//             << this->data(parent, Qt::DisplayRole).toString();
+//             << this->data(index(node.row(),0,node.parent()), Qt::DisplayRole).toString();
+
+    // find out if there are children
+    if (this->hasChildren()) {
+        // repeat for each child
+        for (int i = 0; i < rowCount(node); ++i){
+            walkTree(this->index(i,0,node));
+        }
+    }
+}
+
+QModelIndex DomModel::findInModel(QModelIndex &branch, QString searchText, int col)
+{
+    // is there a match?
+    if (searchText == this->data(index(branch.row(),col,branch.parent()), Qt::DisplayRole).toString())
+        return branch;
+    // find out if there are children
+    if (this->hasChildren()) {
+        // repeat for each child
+        for (int i = 0; i < rowCount(branch); ++i){
+            walkTree(this->index(i,0,branch));
+        }
+    }
+    // return failure
+}
+
 int DomModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.column() > 0)

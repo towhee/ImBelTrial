@@ -63,6 +63,8 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
+    void walkTree(const QModelIndex &node);
+    QModelIndex findInModel(QModelIndex &branch, QString text, int col);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 

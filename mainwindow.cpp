@@ -27,7 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     InitTemplatesList();
     InitTreeViewTemplate();     // this must precede InitComboBoxTemplates()
     InitComboBoxTemplates();
+    InitTreeViewData();
+
+    //model->walkTree(model->index(0,0));
 }
+
 
 void MainWindow::InitModel()
 {
@@ -103,7 +107,7 @@ void MainWindow::InitTreeViewTemplate()
     treeModel = new QSortFilterProxyModel(this);
     treeModel->setSourceModel(model);
     treeModel->setFilterKeyColumn(0);
-    QRegExp rx("ImBel|Template|Image|Border|Shape|Graphic");
+    QRegExp rx("ImBel|Template|Image|Border|Text|Shape|Graphic");
     treeModel->setFilterRegExp(rx);
 
     treeViewTemplate->setModel(treeModel);
@@ -111,6 +115,15 @@ void MainWindow::InitTreeViewTemplate()
     treeViewTemplate->resizeColumnToContents(0);
     treeViewTemplate->setColumnHidden(1, true);
     treeViewTemplate->setColumnHidden(2, true);
+}
+
+void MainWindow::InitTreeViewData()
+{
+    treeViewData->setModel(model);
+    treeViewData->expandAll();
+    treeViewData->setColumnHidden(1, true);
+    treeViewData->resizeColumnToContents(0);
+    treeViewData->resizeColumnToContents(2);
 }
 
 void MainWindow::UpdateTreeViewTemplate(QString templateName)
@@ -189,4 +202,64 @@ void MainWindow::on_comboBoxTemplate_currentTextChanged(const QString &arg1)
     // A template name description has been changed.
     // 1.  Update the description (column 1 in model).
     // 2.  Save the change in ImBel.xml.
+}
+
+void MainWindow::on_treeViewTemplate_pressed(const QModelIndex &index)
+{
+    // When a leaf node in the treeViewTemplate is clicked we want to show all the
+    // properties and values in the treeViewData.  The data takes the form
+    //
+    // Template1
+    //     Object (Image, Border, Text, Shape, etc)
+    //         ObjectN (Border1, Border2 etc or this level may not exist)
+    //             Property
+    //                 Value
+    //
+    // We only want to show properties and values, so we want to pick the next
+    // level up as the treeViewData root (Object or ObjectN).  If any other nodes are clicked in
+    // treeViewTemplates we will ignore.
+    //
+    // The tree in treeViewTemplates is
+    //
+    // Object
+    //     ObjectN (Optional)
+    //
+    // so the test is simple - does the index passed from treeViewTemplates have a child.
+    // if it does then we ignore.
+
+
+//    qDebug() << " ";
+
+//    qDebug() << "treeViewTemplate current: " << treeModel->data(index, Qt::DisplayRole).toString();
+//    qDebug() << "treeViewTemplate root:    " << treeModel->data(treeModel->index(0,0), Qt::DisplayRole).toString();
+//    qDebug() << "treeViewTemplate parent:  " << treeModel->data(treeModel->parent(index), Qt::DisplayRole).toString();
+//    qDebug() << " ";
+//    qDebug() << "comboBoxTemplate->currentIndex(): " << comboBoxTemplate->currentIndex();
+//    qDebug() << "strTemplateNameList: " << strTemplateNameList[comboBoxTemplate->currentIndex()];
+
+   // treeViewData->header()->hide();
+    treeViewData->resizeColumnToContents(0);
+    treeViewData->resizeColumnToContents(2);
+
+    if (index.model()->rowCount(index) == 0) {
+        QString templateName = strTemplateNameList[comboBoxTemplate->currentIndex()];
+        QString nodeName = treeModel->data(index, Qt::DisplayRole).toString();
+        QModelIndexList idxList = model->match(model->index(0, 0), Qt::DisplayRole,
+                                    templateName, 1, Qt::MatchRecursive);
+        QModelIndexList idxList1 = model->match(idxList[0], Qt::DisplayRole,
+                                    nodeName, 1, Qt::MatchRecursive);
+        treeViewData->setRootIndex((idxList1[0]));
+        qDebug() << "root for treeviewData: " << model->data(idxList1[0], Qt::DisplayRole).toString();
+    }
+
+//    qDebug() << "Clicked node has child: " << index.model()->rowCount(index);
+
+    // if the rowCount is zero then no children so we are good to go
+//    if (index.model()->rowCount(index) == 0) {
+//        // starting from the root, get the index for the template
+//        QModelIndex idxModel = model->findInModel(model->index(0,0), templateName, 0);
+//        qDebug() << templateName << "returned: " << model->data(model->idxModel(0,0), Qt::DisplayRole).toString();
+//        //treeViewData->setRootIndex((index));
+//    }
+    //treeViewData->setRootIndex((index));
 }

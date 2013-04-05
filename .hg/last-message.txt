@@ -1,1 +1,1 @@
-comboboxTemplate is now synched with treeviewTemplate
+TreeViewTemplates and treeViewData are now in sync.
